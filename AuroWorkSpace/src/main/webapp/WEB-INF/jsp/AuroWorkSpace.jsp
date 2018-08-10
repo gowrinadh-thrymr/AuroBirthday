@@ -17,21 +17,34 @@
  -->
 </head>
 
-
+<script type="text/javascript">
+var isloggedin=${isloggedin};
+$(document).ready(function(){
+	if(isloggedin==false){
+		window.location.href = "/wps/portal/aurobindo-login";
+	}
+});
+ 
+</script>
 <body>
 
-	<table>
+<c:if test="${isloggedin==true}">
+ <div class="table-responsive table_custom">   
+	<table  class="table table-bordered">
 		<thead>
-		<tr><th>APPLICATION NAME</th><th>URL</th></tr>
+		<tr><th>APPLICATION NAME</th></tr>
 		</thead>
 		<tbody>
 			<c:forEach var="workSpace" items="${workSpaceResult}">
 				<tr>
-					<td><c:out value="${workSpace.getTitle()}" /></td><td><c:out value="${workSpace.getUrl()}" /></td>
+					<td><a href="${workSpace.getUrl()}" target="_blank"><c:out value="${workSpace.getTitle()}" /></a></td>
 				</tr>
 			</c:forEach>
 		</tbody>
 	</table>
+	</div>
+	</c:if>
 </body>
+
 
 </html>

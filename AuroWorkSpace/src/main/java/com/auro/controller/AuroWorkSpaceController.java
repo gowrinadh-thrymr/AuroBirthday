@@ -1,5 +1,7 @@
 package com.auro.controller;
 
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,13 +16,29 @@ import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 import javax.naming.ldap.InitialLdapContext;
 import javax.naming.ldap.LdapContext;
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
+import javax.portlet.PortletMode;
+import javax.portlet.PortletModeException;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
+import javax.portlet.WindowState;
+import javax.portlet.WindowStateException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+import javax.xml.namespace.QName;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
+import org.springframework.web.servlet.view.RedirectView;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Element;
 
 import com.auro.bean.AuroWorkSpaceBean;
 import com.auro.bean.UserAttributes;
@@ -93,10 +111,12 @@ public class AuroWorkSpaceController {
 			}
 		
 		if (userName.equalsIgnoreCase("anonymous portal user")) {
-		
+			map.addAttribute("isloggedin", false);
+			redirectionPage="AuroWorkSpace";
 		} else {
+			redirectionPage="AuroWorkSpace";
+			map.addAttribute("isloggedin", true);
 			UserAttributes userAttributes=getUserBasicAttributes(userName, ctx);
-			redirectionPage = "AuroWorkSpace";
 			Workspace workspace = auroWorkSpaceService.getWorkSpace();
 			if (workspace != null) {
 				List<SiteArea> siteAreas = auroWorkSpaceService.getEntitySiteArea(workspace);
@@ -104,7 +124,7 @@ public class AuroWorkSpaceController {
 					workSpaceResult= auroWorkSpaceService.getAuroWorkSpacebyUserLogin(workspace, siteAreas,userAttributes.getEntity(),userAttributes.getDivision(),userAttributes.getUnit());   //DO DYNAMIC
 				}
 			} else {
-
+				
 			}
 		}
 			System.out.println(workSpaceResult.toString());
@@ -124,6 +144,13 @@ public class AuroWorkSpaceController {
 		return redirectionPage;
 
 	}
+	
+	@ActionMapping
+	    public void sendRedirect(String redirect, ActionRequest req, ActionResponse res)
+	            throws IOException {
+		System.out.println("REDIRECTING ");
+	        res.sendRedirect(redirect);
+	    }
 	
 	private UserAttributes getUserBasicAttributes(String username, LdapContext ctx) {
 		UserAttributes userAttributes=new UserAttributes();

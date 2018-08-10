@@ -179,7 +179,7 @@ public class AuroWorkSpaceServiceImpl implements AuroWorkSpaceService {
 
 		LinkedList<JSONObject> listObject = new LinkedList<JSONObject>();
 		for (SiteArea siteArea : siteAreas) {
-			DocumentIterator it = contentWorkSpace.getByIds(siteArea.getAllChildren(), false, true);
+			DocumentIterator it = contentWorkSpace.getByIds(siteArea.getChildren(), false, true);
 			if (it != null) {
 				Object obj = null;
 				Content content = null;

@@ -35,8 +35,8 @@ public class ConnectionServiceImpl implements ConnectionService{
 			hashtable.put(passwordparam, "Welcome@123");
 			hashtable.put(referralparam, "follow");
 			//hashtable.put(urlparam, "ldap://192.168.2.174:389");
-    		hashtable.put(urlparam, "ldap://10.0.45.108:1389"); //UAT
-//			hashtable.put(urlparam, "ldap://10.0.45.116:389");  //PRODUCTION
+//    		hashtable.put(urlparam, "ldap://10.0.45.108:1389"); //UAT
+			hashtable.put(urlparam, "ldap://10.0.45.116:389");  //PRODUCTION
 			// Make LDAP connection
 			ctx = new InitialLdapContext(hashtable, null);
 			System.out.println("TDS Connection Started...");

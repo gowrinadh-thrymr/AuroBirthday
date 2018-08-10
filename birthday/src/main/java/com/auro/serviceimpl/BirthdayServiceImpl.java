@@ -1,5 +1,7 @@
 package com.auro.serviceimpl;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -36,7 +38,7 @@ public class BirthdayServiceImpl implements BirthdayService {
 			 String searchFilter = "(&(objectClass=inetOrgPerson)(cn=*))";
 			constraints.setSearchScope(SearchControls.SUBTREE_SCOPE);
 			String[] attrIDs = { "cn", "employeeDateOfBirth", "employeeDateOfMarraige", "employeeDateOfJoining",
-					"displayName" };
+					"displayName","jpegPhoto"};
 			constraints.setReturningAttributes(attrIDs);
 			String searchBase = "CN=hydhoconn,DC=corp,DC=aurobindo,DC=com";
 
@@ -45,16 +47,19 @@ public class BirthdayServiceImpl implements BirthdayService {
 			while (answer.hasMoreElements()) {
 					
 					Attributes attrs = ((SearchResult) answer.next()).getAttributes();
-					
 					if(attrs.get("employeeDateOfBirth")!=null) {
 						if(verifyDate(convertStringToDate((String) attrs.get("employeeDateOfBirth").get()))){
 							EmployeeBean bean = new EmployeeBean();
 							if(attrs.get("displayName")!=null)
 							bean.setName((String) attrs.get("displayName").get());
-							
-							bean.setBirthDate(convertDateToStringPassword(convertStringToDate((String) attrs.get("employeeDateOfBirth").get())));
-							
-							bean.setBod(convertStringToDate((String) attrs.get("employeeDateOfBirth").get()));
+							if(attrs.get("employeeDateOfBirth")!=null) {
+								bean.setBirthDate(convertDateToStringPassword(convertStringToDate((String) attrs.get("employeeDateOfBirth").get())));
+								
+								bean.setBod(convertStringToDate((String) attrs.get("employeeDateOfBirth").get()));
+							}
+							if(attrs.get("jpegPhoto;binary")!=null) {
+								bean.setProfilePic(getBase64Image((byte[])attrs.get("jpegPhoto;binary").get()));
+							}
 							birthdays.add(bean);
 						}
 					}
@@ -63,10 +68,15 @@ public class BirthdayServiceImpl implements BirthdayService {
 							EmployeeBean bean = new EmployeeBean();
 							if(attrs.get("displayName")!=null)
 							bean.setName((String) attrs.get("displayName").get());
-							
-							bean.setBirthDate(convertDateToStringPassword(convertStringToDate((String) attrs.get("employeeDateOfMarraige").get())));
-							
-							bean.setBod(convertStringToDate((String) attrs.get("employeeDateOfMarraige").get()));
+							if(attrs.get("employeeDateOfMarraige")!=null) {
+								
+								bean.setBirthDate(convertDateToStringPassword(convertStringToDate((String) attrs.get("employeeDateOfMarraige").get())));
+								
+								bean.setBod(convertStringToDate((String) attrs.get("employeeDateOfMarraige").get()));
+							}
+							if(attrs.get("jpegPhoto;binary")!=null) {
+								bean.setProfilePic(getBase64Image((byte[])attrs.get("jpegPhoto;binary").get()));
+							}
 							marriageAnniversaries.add(bean);
 						}
 					}
@@ -76,11 +86,22 @@ public class BirthdayServiceImpl implements BirthdayService {
 							if(attrs.get("displayName")!=null)
 							bean.setName((String) attrs.get("displayName").get());
 							
-							bean.setBirthDate(convertDateToStringPassword(convertStringToDate((String) attrs.get("employeeDateOfJoining").get())));
-							bean.setBod(convertStringToDate((String) attrs.get("employeeDateOfJoining").get()));
+							if(attrs.get("employeeDateOfJoining")!=null) {
+								bean.setBirthDate(convertDateToStringPassword(convertStringToDate((String) attrs.get("employeeDateOfJoining").get())));
+								bean.setBod(convertStringToDate((String) attrs.get("employeeDateOfJoining").get()));
+							}
+							if(attrs.get("jpegPhoto;binary")!=null) {
+								bean.setProfilePic(getBase64Image((byte[])attrs.get("jpegPhoto;binary").get()));
+								System.out.println("-------------------jpegPhoto---------------"+attrs.get("jpegPhoto"));
+							}
+							
 							serviceAnniversaries.add(bean);
 						}
 					}
+					
+					
+					
+					
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -95,7 +116,10 @@ public class BirthdayServiceImpl implements BirthdayService {
 		return employees;
 	}
 
-	
+	public String getBase64Image(byte[] blob) throws SQLException, IOException {
+		String base64Image = org.apache.commons.codec.binary.Base64.encodeBase64String(blob);
+		return base64Image;
+	}
 	public Date convertStringToDate(String input) {
 		DateFormat df = new SimpleDateFormat("dd-MM-yyyy"); 
 		Date startDate = null;

@@ -8,12 +8,20 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title></title>
+<style type="text/css">
+ul.users-list li img {
+    width: 62px;
+    height: 62px;
+}
+
+</style>
 </head>
 <body>
 
 
+
  <div class="row">
-            <div class="col-md-4 birthdays-blocks">
+            <div class="col-md-12 birthdays-blocks">
             	<div class="horizontalTab">
                         <ul class="resp-tabs-list">
                             <li>Birthday</li>
@@ -25,8 +33,15 @@
                                 <div class="inner-blocks">
                                     <ul class="users-list">
 								<c:forEach var="employee" items="${birthday}">
-								        <li>
-                                          <img src="images/user1.jpg" alt="User Image">
+										<li>
+										<c:choose>
+											<c:when test="${employee.profilePic==null}">
+											<img src="/wps/contenthandler/dav/themelist/Aurobindo-dashboard-theme/images/user1.jpg" alt="User Image"/>
+											</c:when>
+											<c:otherwise>
+											<img src="data:image/jpg;base64,${employee.profilePic}" alt="User Image"/>
+											</c:otherwise>
+										</c:choose> 
                                           <a class="users-list-name" href="#"><c:out value="${employee.name}"/></a>
                                           <span class="users-list-date"><c:out value="${employee.birthDate}"/></span>
                                         </li>
@@ -34,35 +49,49 @@
                              
                                       </ul>
                                 </div>
-                                <span><a href="#">View All Users</a></span>
+                                <!-- <span><a href="#">View All Users</a></span> -->
                             </div>
                             <div class="tab-2">
                                 <div class="inner-blocks">
                                    <ul class="users-list">
                                        <c:forEach var="employee" items="${marriageAnniversary}">
                                         <li>
-                                          <img src="images/user3.jpg" alt="User Image">
+                                         <c:choose>
+											<c:when test="${employee.profilePic==null}">
+											<img src="/wps/contenthandler/dav/themelist/Aurobindo-dashboard-theme/images/user3.jpg" alt="User Image"/>
+											</c:when>
+											<c:otherwise>
+											<img src="data:image/jpg;base64,${employee.profilePic}" alt="User Image"/>
+											</c:otherwise>
+										</c:choose> 
                                           <a class="users-list-name" href="#"><c:out value="${employee.name}"/></a>
                                           <span class="users-list-date"><c:out value="${employee.birthDate}"/></span>
                                         </li>
                                        </c:forEach>
                                       </ul>
                                 </div>
-                                <span><a href="#">View All Users</a></span>
+                                <!-- <span><a href="#">View All Users</a></span> -->
                             </div>
                             <div class="tab-3">
                                 <div class="inner-blocks">
                                    <ul class="users-list">
                                    <c:forEach var="employee" items="${serviceAnniversary}">
                                         <li>
-                                          <img src="images/user1.jpg" alt="User Image">
+                                         <c:choose>
+											<c:when test="${employee.profilePic==null}">
+											<img src="/wps/contenthandler/dav/themelist/Aurobindo-dashboard-theme/images/user1.jpg" alt="User Image"/>
+											</c:when>
+											<c:otherwise>
+											<img src="data:image/jpg;base64,${employee.profilePic}" alt="User Image"/>
+											</c:otherwise>
+										</c:choose> 
                                           <a class="users-list-name" href="#"><c:out value="${employee.name}"/></a>
                                           <span class="users-list-date"><c:out value="${employee.birthDate}"/></span>
                                         </li>
                                     </c:forEach>
                                       </ul>
                                 </div>
-                                <span><a href="#">View All Users</a></span>
+                                <!-- <span><a href="#">View All Users</a></span> -->
                             </div>
                         </div>
                     </div>

@@ -18,7 +18,17 @@ public class EmployeeBean{
 	private String birthDate;
 	
 	private Date bod;
+	
+	private String profilePic;
+	
 
+	public String getProfilePic() {
+		return profilePic;
+	}
+
+	public void setProfilePic(String profilePic) {
+		this.profilePic = profilePic;
+	}
 
 	public Date getBod() {
 		return bod;

@@ -1,9 +1,15 @@
 package com.auro.controller;
 
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import javax.naming.ldap.InitialLdapContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,10 +41,8 @@ public class BirthdayPortlet {
 				List<BirthdayBean> employees = birthdayService.getUsers(ctx);
 				Collections.sort(employees.get(0).getBirthdays(), EmployeeBean.employeeBean);
 				map.addAttribute("birthday",employees.get(0).getBirthdays());
-				
 				Collections.sort(employees.get(0).getMarriageAnniversaries(), EmployeeBean.employeeBean);
 				map.addAttribute("marriageAnniversary",employees.get(0).getMarriageAnniversaries());
-				
 				Collections.sort(employees.get(0).getServiceAnniversaries(), EmployeeBean.employeeBean);
 				map.addAttribute("serviceAnniversary",employees.get(0).getServiceAnniversaries());
 			}

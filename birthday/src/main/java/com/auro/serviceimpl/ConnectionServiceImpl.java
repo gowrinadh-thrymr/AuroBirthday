@@ -40,7 +40,8 @@ public class ConnectionServiceImpl implements ConnectionService  {
 			hashtable.put(passwordparam, "Welcome@123");
 			hashtable.put(referralparam, "follow");
 			// hashtable.put(urlparam, "ldap://192.168.2.174:389");
-			hashtable.put(urlparam, "ldap://10.0.45.108:1389");
+//			hashtable.put(urlparam, "ldap://10.0.45.108:1389"); UAT
+			hashtable.put(urlparam, "ldap://10.0.45.116:389");  //PRODUCTION
 			
 			//specify attributes to be returned in binary format
 			hashtable.put("java.naming.ldap.attributes.binary","jpegPhoto");

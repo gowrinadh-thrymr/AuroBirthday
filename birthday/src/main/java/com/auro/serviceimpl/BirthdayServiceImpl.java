@@ -37,7 +37,7 @@ public class BirthdayServiceImpl implements BirthdayService {
 			SearchControls constraints = new SearchControls();
 			 String searchFilter = "(&(objectClass=inetOrgPerson)(cn=*))";
 			constraints.setSearchScope(SearchControls.SUBTREE_SCOPE);
-			String[] attrIDs = { "cn", "employeeDateOfBirth", "employeeDateOfMarraige", "employeeDateOfJoining",
+			String[] attrIDs = { "uid","cn", "employeeDateOfBirth", "employeeDateOfMarraige", "employeeDateOfJoining",
 					"displayName","jpegPhoto"};
 			constraints.setReturningAttributes(attrIDs);
 			String searchBase = "CN=hydhoconn,DC=corp,DC=aurobindo,DC=com";
@@ -48,54 +48,73 @@ public class BirthdayServiceImpl implements BirthdayService {
 					
 					Attributes attrs = ((SearchResult) answer.next()).getAttributes();
 					if(attrs.get("employeeDateOfBirth")!=null) {
-						if(verifyDate(convertStringToDate((String) attrs.get("employeeDateOfBirth").get()))){
-							EmployeeBean bean = new EmployeeBean();
-							if(attrs.get("displayName")!=null)
-							bean.setName((String) attrs.get("displayName").get());
-							if(attrs.get("employeeDateOfBirth")!=null) {
-								bean.setBirthDate(convertDateToStringPassword(convertStringToDate((String) attrs.get("employeeDateOfBirth").get())));
+						if((String) attrs.get("employeeDateOfBirth").get()!="") {
+							try {
+								if(verifyDate(convertStringToDate((String) attrs.get("employeeDateOfBirth").get()))){
+									EmployeeBean bean = new EmployeeBean();
+									if(attrs.get("displayName")!=null)
+										bean.setName((String) attrs.get("displayName").get());
+									if(attrs.get("employeeDateOfBirth")!=null) {
+										bean.setBirthDate(convertDateToStringPassword(convertStringToDate((String) attrs.get("employeeDateOfBirth").get())));
+										
+										bean.setBod(convertStringToDate((String) attrs.get("employeeDateOfBirth").get()));
+									}
+									if(attrs.get("jpegPhoto;binary")!=null) {
+										bean.setProfilePic(getBase64Image((byte[])attrs.get("jpegPhoto;binary").get()));
+									}
+									birthdays.add(bean);
+								}
+							} catch (Exception e) {
+								System.out.println("Unrecognizable Date format employeeDateOfBirth : "+(String) attrs.get("uid").get());
 								
-								bean.setBod(convertStringToDate((String) attrs.get("employeeDateOfBirth").get()));
 							}
-							if(attrs.get("jpegPhoto;binary")!=null) {
-								bean.setProfilePic(getBase64Image((byte[])attrs.get("jpegPhoto;binary").get()));
-							}
-							birthdays.add(bean);
 						}
 					}
 					if(attrs.get("employeeDateOfMarraige")!=null) {
-						if(verifyDate(convertStringToDate((String) attrs.get("employeeDateOfMarraige").get()))) {
-							EmployeeBean bean = new EmployeeBean();
-							if(attrs.get("displayName")!=null)
-							bean.setName((String) attrs.get("displayName").get());
-							if(attrs.get("employeeDateOfMarraige")!=null) {
-								
-								bean.setBirthDate(convertDateToStringPassword(convertStringToDate((String) attrs.get("employeeDateOfMarraige").get())));
-								
-								bean.setBod(convertStringToDate((String) attrs.get("employeeDateOfMarraige").get()));
+						if((String) attrs.get("employeeDateOfMarraige").get()!="") {
+							try {
+								if(verifyDate(convertStringToDate((String) attrs.get("employeeDateOfMarraige").get()))) {
+									EmployeeBean bean = new EmployeeBean();
+									if(attrs.get("displayName")!=null)
+										bean.setName((String) attrs.get("displayName").get());
+									if(attrs.get("employeeDateOfMarraige")!=null) {
+										
+										bean.setBirthDate(convertDateToStringPassword(convertStringToDate((String) attrs.get("employeeDateOfMarraige").get())));
+										
+										bean.setBod(convertStringToDate((String) attrs.get("employeeDateOfMarraige").get()));
+									}
+									if(attrs.get("jpegPhoto;binary")!=null) {
+										bean.setProfilePic(getBase64Image((byte[])attrs.get("jpegPhoto;binary").get()));
+									}
+									marriageAnniversaries.add(bean);
+								}
+							} catch (Exception e) {
+								System.out.println("Unrecognizable Date format employeeDateOfMarraige : "+(String) attrs.get("uid").get());
 							}
-							if(attrs.get("jpegPhoto;binary")!=null) {
-								bean.setProfilePic(getBase64Image((byte[])attrs.get("jpegPhoto;binary").get()));
-							}
-							marriageAnniversaries.add(bean);
 						}
 					}
 					if(attrs.get("employeeDateOfJoining")!=null) {
-						if(verifyDate(convertStringToDate((String) attrs.get("employeeDateOfJoining").get()))) {
-							EmployeeBean bean = new EmployeeBean();
-							if(attrs.get("displayName")!=null)
-							bean.setName((String) attrs.get("displayName").get());
-							
-							if(attrs.get("employeeDateOfJoining")!=null) {
-								bean.setBirthDate(convertDateToStringPassword(convertStringToDate((String) attrs.get("employeeDateOfJoining").get())));
-								bean.setBod(convertStringToDate((String) attrs.get("employeeDateOfJoining").get()));
+						if((String) attrs.get("employeeDateOfJoining").get()!="") {
+							try {
+								if(verifyDate(convertStringToDate((String) attrs.get("employeeDateOfJoining").get()))) {
+									EmployeeBean bean = new EmployeeBean();
+									if(attrs.get("displayName")!=null)
+										bean.setName((String) attrs.get("displayName").get());
+									
+									if(attrs.get("employeeDateOfJoining")!=null) {
+										bean.setBirthDate(convertDateToStringPassword(convertStringToDate((String) attrs.get("employeeDateOfJoining").get())));
+										bean.setBod(convertStringToDate((String) attrs.get("employeeDateOfJoining").get()));
+									}
+									if(attrs.get("jpegPhoto;binary")!=null) {
+										bean.setProfilePic(getBase64Image((byte[])attrs.get("jpegPhoto;binary").get()));
+									}
+									
+									serviceAnniversaries.add(bean);
+								}
+							} catch (Exception e) {
+								e.printStackTrace();
+								System.out.println("Unrecognizable Date format employeeDateOfJoining : "+(String) attrs.get("uid").get());
 							}
-							if(attrs.get("jpegPhoto;binary")!=null) {
-								bean.setProfilePic(getBase64Image((byte[])attrs.get("jpegPhoto;binary").get()));
-								System.out.println("-------------------jpegPhoto---------------"+attrs.get("jpegPhoto"));
-							}
-							
-							serviceAnniversaries.add(bean);
 						}
 					}
 					
@@ -133,17 +152,23 @@ public class BirthdayServiceImpl implements BirthdayService {
 	}
 	public Boolean verifyDate(Date input) {
 		Boolean result = Boolean.FALSE;
-		// Create 2 intances of calendar
-		Calendar cal1 = Calendar.getInstance();
-		Calendar cal2 = Calendar.getInstance();
-		// set the given date in one of the instance and current date in another
-		cal1.setTime(input);
-		cal2.setTime(new Date());
-		// now compare the dates using functions
-//		&& cal2.get(Calendar.DAY_OF_MONTH)<=cal1.get(Calendar.DAY_OF_MONTH)
-			if (cal1.get(Calendar.DAY_OF_YEAR) >= cal2.get(Calendar.DAY_OF_YEAR)) {
+		try {
+			Calendar cal1 = Calendar.getInstance();
+			Calendar cal2 = Calendar.getInstance();
+			Calendar cal3 = Calendar.getInstance();
+			cal1.setTime(input);
+			cal2.setTime(new Date());
+			cal3.setTime(new Date());
+			cal2.add(Calendar.DAY_OF_MONTH,30);
+			if (cal3.get(Calendar.DAY_OF_YEAR) <= cal1.get(Calendar.DAY_OF_YEAR)) {
+				if (cal1.get(Calendar.DAY_OF_YEAR) <= cal2.get(Calendar.DAY_OF_YEAR)) {
 					result = Boolean.TRUE;
-		     }
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			result = Boolean.FALSE;
+		}
 		return result;
 	}
 	
@@ -158,7 +183,15 @@ public class BirthdayServiceImpl implements BirthdayService {
 		return password;
 	}
 	
-
-
-
+/*	public static void main(String[] args) {
+		Calendar cal1 = Calendar.getInstance();
+		Calendar cal2 = Calendar.getInstance();
+		cal1.setTime(new Date());
+		cal2.setTime(new Date());
+		cal2.add(Calendar.DAY_OF_MONTH, -80);
+		
+		System.out.println(cal1.getTimeInMillis());
+		System.out.println(cal2.getTimeInMillis());
+//		System.out.println(cal2.get(Calendar.LONG_STANDALONE));
+	}*/
 }

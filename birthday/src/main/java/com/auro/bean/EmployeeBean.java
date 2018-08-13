@@ -1,14 +1,16 @@
 package com.auro.bean;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 
-public class EmployeeBean{
+public class EmployeeBean {
 
-	
 	private String uid;
-	
+
 	private String name;
 
 	private String marriageAnniversaryDate;
@@ -16,11 +18,10 @@ public class EmployeeBean{
 	private String serviceAnniversaryDate;
 
 	private String birthDate;
-	
+
 	private Date bod;
-	
+
 	private String profilePic;
-	
 
 	public String getProfilePic() {
 		return profilePic;
@@ -84,29 +85,34 @@ public class EmployeeBean{
 				+ ", serviceAnniversaryDate=" + serviceAnniversaryDate + ", birthDate=" + birthDate + "]";
 	}
 
+	public static Date convertStringToDate(String input) {
+		DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+		Date startDate = null;
+		try {
+			startDate = df.parse(input.trim());
+		} catch (ParseException e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+		}
+		return startDate;
+	}
 
-	   /*Comparator for sorting the list by Date*/
-    public static Comparator<EmployeeBean> employeeBean = new Comparator<EmployeeBean>() {
+	/* Comparator for sorting the list by Date */
+	public static Comparator<EmployeeBean> employeeBean = new Comparator<EmployeeBean>() {
+		public int compare(EmployeeBean s1, EmployeeBean s2) {
+			Calendar cal1 = Calendar.getInstance();
+			Calendar cal2 = Calendar.getInstance();
+			cal1.setTime(s1.getBod());
+			cal2.setTime(s2.getBod());
+			int month1 = cal1.get(Calendar.MONTH);
+			int month2 = cal2.get(Calendar.MONTH);
+			if (month1 < month2)
+				return -1;
+			else if (month1 == month2)
+				return cal1.get(Calendar.DAY_OF_MONTH) - cal2.get(Calendar.DAY_OF_MONTH);
+			else
+				return 1;
+		}
+	};
 
-	public int compare(EmployeeBean s1, EmployeeBean s2) {
-		
-		Calendar cal1 = Calendar.getInstance();
-		Calendar cal2 = Calendar.getInstance();
-		
-		cal1.setTime(s1.getBod());
-		cal2.setTime(s2.getBod());
-	 
-	   /*For ascending order*/
-	   return cal1.get(Calendar.DAY_OF_YEAR)-cal2.get(Calendar.DAY_OF_YEAR);
-
-	   /*For descending order*/
-	   //rollno2-rollno1;
-   }};
-
-
-
-
-
-	
-	
 }
